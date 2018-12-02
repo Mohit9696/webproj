@@ -1,15 +1,48 @@
 from flask import Flask,render_template,request,redirect,url_for
+from forms import *
 import sqlite3 as sql
 app=Flask(__name__)
 
 @app.route('/')
 def home():
     return render_template('mainwta.jinja2')
-	
+
+def SignIn(username,password)):
+    try:
+        with sql.connect("sqldb.db") as con:
+            cur = con.cursor()
+            cur.execute("create table if not exists weight (c_id INT primary key, c_date TEXT , c_weight TEXT , c_age TEXT , c_bmi INT ,c_height TEXT)")
+            cur.execute("INSERT INTO weight (c_id,c_date,c_weight,c_age,c_bmi,c_height) VALUES (?,?,?,?,?,?)", (c_id,c_date,c_weight,c_age,c_bmi,c_height))
+            con.commit()
+            msg = "Record saved successfully"
+    except:
+        con.rollback()
+        msg = "Error in inserting record"
+
+@app.route('/login',methods=['GET','POST'])
+def LoginPage():
+	login=False
+	form=LoginForm()
+	error=None
+	if(form.validate_on_submit()):
+		username=request.form['username']
+		password=request.form['password']
+		if(SignIn(username,password)):
+			session['username']=username
+			session['password']=password
+			session['logged_in']=True
+			flash('Login requested for user {},remember_me {}'.format(form.username.data,form.remember_me.data))
+			return redirect('/upload')
+		else:
+			error='Invalid Credentials. Please try again.'
+	return render_template('login.html',title='Login',login=False,form=form,error=error)
+
+
+
 @app.route('/bmi/')
 def bmi():
     return render_template('bmical.jinja2')
-	
+
 @app.route('/weights/')
 def weight():
     return render_template('rooms.jinja2')
