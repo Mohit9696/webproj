@@ -123,23 +123,26 @@ input[type="submit"]:active {
       <h1>Contact</h1>
     </div>
     <div class="w3-container">
-      <form action="/action_page.php" target="_blank">
+      <form action=""  method = "POST" novalidate>
         <section class="container">
 
   <div id="Admin-login-box">
   <div class="left">
     <h1>Login</h1>
 
-    <input type="text" name="email" placeholder="Email" />
-    <input type="password" name="password" placeholder="Password" />
-    <input type="submit" name="admin_submit" value="login" />
+    {{ form.hidden_tag() }}
+          {{ form.username(size=32,placeholder="Username")}}
+          {{ form.password(size=32,placeholder="Password")}}
+          {{ form.submit() }}
   </div>
 </section>
       </form>
+      {% if error %}
+       <p class="error"><strong>Error:</strong> {{ error }}
+{% endif %}
     </div>
   </div>
 </div>
 
 </body>
 </html>
-
