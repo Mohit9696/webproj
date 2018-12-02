@@ -11,21 +11,19 @@ def SignIn(uname,pwd)):
     try:
         with sql.connect("sqldb.db") as con:
             cur = con.cursor()
-            cur.execute("create table if not exists users (pwd TEXT primary key, uname TEXT")
+            cur.execute("create table if not exists users (pwd TEXT primary key, uname TEXT)")
             con.commit()
             res = cur.execute('select pwd from users where uname = "%s"'%(uname))
             if str(res[0][0]) == pwd:
-            q='select uid from users where uname= "%s"'%(uname)
-            r=Execute(q)
-            session['uid']=r[0][0]
-            print(session['uid'])
-            return True
-        else:
-            return False
+
+                return True
+            else:
+                return False
 
             msg = "Record saved successfully"
     except:
         con.rollback()
+        return False
         msg = "Error in inserting record"
 
 @app.route('/login',methods=['GET','POST'])
@@ -40,8 +38,7 @@ def LoginPage():
 			session['username']=username
 			session['password']=password
 			session['logged_in']=True
-			flash('Login requested for user {},remember_me {}'.format(form.username.data,form.remember_me.data))
-			return redirect('/upload')
+			return redirect('/')
 		else:
 			error='Invalid Credentials. Please try again.'
 	return render_template('login.html',title='Login',login=False,form=form,error=error)
