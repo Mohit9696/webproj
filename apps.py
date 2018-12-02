@@ -41,7 +41,7 @@ def LoginPage():
 			return redirect('/')
 		else:
 			error='Invalid Credentials. Please try again.'
-	return render_template('login.html',title='Login',login=False,form=form,error=error)
+	return render_template('mainwta.jinja2',title='Login',login=False,form=form,error=error)
 
 
 
