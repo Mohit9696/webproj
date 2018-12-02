@@ -7,13 +7,22 @@ app=Flask(__name__)
 def home():
     return render_template('mainwta.jinja2')
 
-def SignIn(username,password)):
+def SignIn(uname,pwd)):
     try:
         with sql.connect("sqldb.db") as con:
             cur = con.cursor()
-            cur.execute("create table if not exists weight (c_id INT primary key, c_date TEXT , c_weight TEXT , c_age TEXT , c_bmi INT ,c_height TEXT)")
-            cur.execute("INSERT INTO weight (c_id,c_date,c_weight,c_age,c_bmi,c_height) VALUES (?,?,?,?,?,?)", (c_id,c_date,c_weight,c_age,c_bmi,c_height))
+            cur.execute("create table if not exists users (pwd TEXT primary key, uname TEXT")
             con.commit()
+            res = cur.execute('select pwd from users where uname = "%s"'%(uname))
+            if str(res[0][0]) == pwd:
+            q='select uid from users where uname= "%s"'%(uname)
+            r=Execute(q)
+            session['uid']=r[0][0]
+            print(session['uid'])
+            return True
+        else:
+            return False
+
             msg = "Record saved successfully"
     except:
         con.rollback()
